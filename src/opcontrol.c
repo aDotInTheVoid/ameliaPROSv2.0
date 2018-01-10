@@ -11,7 +11,10 @@
  */
 
 #include "main.h"
+#include "hardware.h"
 
+
+const int joystickNumber = 1;
 /*
  * Runs the user operator control code. This function will be started in its own task with the
  * default priority and stack size whenever the robot is enabled via the Field Management System
@@ -31,6 +34,17 @@
  */
 void operatorControl() {
 	while (1) {
+		//Drivetrain
+		power = joystickGetAnalog(joystickNumber, forwardJoystick);
+		turn  = joystickGetAnalog(joystickNumber, turnJoystick);
+
+		motorSet(leftFrontMotor, -power-turn);
+		motorSet(leftBackMotor, -power-turn)
+
+		motorSet(rightFrontMotor);
+		motorSet(rightBackMotor);
+
+
 		delay(20);
 	}
 }
