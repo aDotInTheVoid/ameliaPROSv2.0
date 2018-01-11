@@ -1,8 +1,14 @@
 #ifndef _HARDWARE_H_
 #define _HARDWARE_H_
 
-int leftArmMotorsNum = 1;
-int leftArmMotors[3] = {1, 2, 3};
+
+#define ARM_MOTORS_PER_SIDE  1
+
+
+const int leftArmMotors  [ARM_MOTORS_PER_SIDE] = {6};
+const int rightArmMotors [ARM_MOTORS_PER_SIDE] = {7};
+
+int armSpeed = 100;
 
 enum Drivetrain {
     rightFrontMotor = 1,
@@ -17,4 +23,6 @@ enum Joystick {
     armButtons = 5
 };
 
+
+const int joystickNumber = 1;
 #endif

@@ -13,8 +13,7 @@
 #include "main.h"
 #include "hardware.h"
 
-
-const int joystickNumber = 1;
+void armSet(const int *motots, const int numOfMotors, int speed);
 /*
  * Runs the user operator control code. This function will be started in its own task with the
  * default priority and stack size whenever the robot is enabled via the Field Management System
@@ -34,17 +33,37 @@ const int joystickNumber = 1;
  */
 void operatorControl() {
 	while (1) {
+
 		//Drivetrain
-		power = joystickGetAnalog(joystickNumber, forwardJoystick);
-		turn  = joystickGetAnalog(joystickNumber, turnJoystick);
+		int power = joystickGetAnalog(joystickNumber, forwardJoystick);
+		int turn  = joystickGetAnalog(joystickNumber, turnJoystick);
 
 		motorSet(leftFrontMotor, -power-turn);
-		motorSet(leftBackMotor, -power-turn)
+		motorSet(leftBackMotor,  -power-turn);
+		motorSet(rightFrontMotor, power-turn);
+		motorSet(rightBackMotor,  power-turn);
 
-		motorSet(rightFrontMotor);
-		motorSet(rightBackMotor);
+		//Arm
+		bool up   = joystickGetDigital(joystickNumber, armButtons, JOY_UP);
+        bool down = joystickGetDigital(joystickNumber, armButtons, JOY_DOWN);
 
+		if (up){
+			armSet(leftArmMotors , ARM_MOTORS_PER_SIDE,  armSpeed);
+			armSet(rightArmMotors, ARM_MOTORS_PER_SIDE, -armSpeed);
+		}else if(down){
+			armSet(leftArmMotors , ARM_MOTORS_PER_SIDE, -armSpeed);
+			armSet(rightArmMotors, ARM_MOTORS_PER_SIDE,  armSpeed);
+		}else{
+			armSet(leftArmMotors , ARM_MOTORS_PER_SIDE, 0);
+			armSet(rightArmMotors, ARM_MOTORS_PER_SIDE, 0);
+		} //endif
 
-		delay(20);
+	delay(20);
+	} //endwhile
+} //endfunc
+
+void armSet(const int *motots, const int numOfMotors, int speed){
+	for(int i = 0; i < numOfMotors; i++){
+		motorSet(motots[i], speed);
 	}
 }
