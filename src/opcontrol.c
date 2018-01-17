@@ -12,8 +12,9 @@
 
 #include "main.h"
 #include "hardware.h"
+#include "arm.h"
 
-void armSet(const int *motots, const int numOfMotors, int speed);
+
 /*
  * Runs the user operator control code. This function will be started in its own task with the
  * default priority and stack size whenever the robot is enabled via the Field Management System
@@ -47,23 +48,8 @@ void operatorControl() {
 		bool up   = joystickGetDigital(joystickNumber, armButtons, JOY_UP);
         bool down = joystickGetDigital(joystickNumber, armButtons, JOY_DOWN);
 
-		if (up){
-			armSet(leftArmMotors , ARM_MOTORS_PER_SIDE,  armSpeed);
-			armSet(rightArmMotors, ARM_MOTORS_PER_SIDE, -armSpeed);
-		}else if(down){
-			armSet(leftArmMotors , ARM_MOTORS_PER_SIDE, -armSpeed);
-			armSet(rightArmMotors, ARM_MOTORS_PER_SIDE,  armSpeed);
-		}else{
-			armSet(leftArmMotors , ARM_MOTORS_PER_SIDE, 0);
-			armSet(rightArmMotors, ARM_MOTORS_PER_SIDE, 0);
-		} //endif
+		armSet(up, down, leftArmMotors, rightArmMotors);
 
 	delay(20);
 	} //endwhile
 } //endfunc
-
-void armSet(const int *motots, const int numOfMotors, int speed){
-	for(int i = 0; i < numOfMotors; i++){
-		motorSet(motots[i], speed);
-	}
-}
